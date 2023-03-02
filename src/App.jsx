@@ -34,7 +34,7 @@ function App() {
   return (
     <div className="flex flex-col h-screen justify-between items-center p-12">
       <section className="w-full h-full sm:h-[30rem] sm:w-[30rem] flex justify-center items-center">
-        {/* <canvas id="mainCanvas" className='border border-black ' /> */}
+        <canvas id="mainCanvas" className='border border-black ' />
         <Canvas order={order} />
         {/* <svg id="triangle" viewBox="0 0 100 100">
           <polygon className="fill-none stroke-black stroke-2" points={points} />
