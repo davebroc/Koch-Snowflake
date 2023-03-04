@@ -8,15 +8,16 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.geom.Line2D;
 import java.util.HashMap;
+import java.awt.geom.AffineTransform;
+import java.awt.event.*;
 
-public class KochSnowflake extends JPanel {
+public class KochSnowflake extends JPanel implements MouseWheelListener {
 
     private static String axiom = "F++F++F";
     private static String productionRule = "F-F++F-F";
     private int order = 1;
-    // private final int startLength = 243;
-    // private final int startLength = 729; // 3^6
-    // private final int startLength = 2187; // 3^7
+    private double zoomFactor = 1;
+
     private final int startLength = 59049; // 3^10
 
     private HashMap<Integer, Double[]> trigValues = new HashMap<Integer, Double[]>();
@@ -25,6 +26,7 @@ public class KochSnowflake extends JPanel {
     // [1] is sine
 
     public KochSnowflake() {
+        addMouseWheelListener(this);
     }
 
     public void setOrder(int newOrder) {
@@ -32,7 +34,6 @@ public class KochSnowflake extends JPanel {
     }
 
     private void drawSnowflake(Graphics2D g, int angle, String str, int length, int ord) {
-        System.out.println(length);
         for (char c : str.toCharArray()) {
             switch (c) {
                 case 'F':
@@ -81,6 +82,18 @@ public class KochSnowflake extends JPanel {
         return new Dimension(1000, 900);
     }
 
+    public void mouseWheelMoved(MouseWheelEvent e) {
+        System.out.println(e.getWheelRotation());
+        if (e.getWheelRotation() < 0) {// zoom in
+            // mousePoint = e.getPoint();
+            zoomFactor *= 1.1;
+        } else { // zoom out
+            // mousePoint = e.getPoint();
+            zoomFactor /= 1.1;
+        }
+        repaint();
+    }
+
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
@@ -88,8 +101,10 @@ public class KochSnowflake extends JPanel {
         g2.setStroke(new BasicStroke(1));
         g2.setColor(new Color(0, 0, 0));
         g2.translate(100, 200);
-        g2.scale(0.01, 0.01);
+        g2.scale(0.01 * zoomFactor, 0.01 * zoomFactor);
+
         drawSnowflake(g2, 0, axiom, startLength, order);
+
     }
 
 }
