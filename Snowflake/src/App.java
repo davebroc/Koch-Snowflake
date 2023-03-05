@@ -17,7 +17,7 @@ public class App {
         JSlider slider = new JSlider();
         slider.setValue(1);
         slider.setMinimum(1);
-        slider.setMaximum(10);
+        slider.setMaximum(12);
         slider.setMajorTickSpacing(1);
         slider.setPaintTicks(true);
         slider.setPaintLabels(true);

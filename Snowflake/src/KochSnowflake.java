@@ -18,12 +18,9 @@ public class KochSnowflake extends JPanel implements MouseWheelListener {
     private int order = 1;
     private double zoomFactor = 1;
 
-    private final int startLength = 59049; // 3^10
+    private final int startLength = 14348907; // 3^15
 
-    private HashMap<Integer, Double[]> trigValues = new HashMap<Integer, Double[]>();
-    // memoisation of trig functions of angles (key)
-    // [0] is cosine
-    // [1] is sine
+    private HashMap<String, Line2D> lines = new HashMap<String, Line2D>();
 
     public KochSnowflake() {
         addMouseWheelListener(this);
@@ -34,6 +31,8 @@ public class KochSnowflake extends JPanel implements MouseWheelListener {
     }
 
     private void drawSnowflake(Graphics2D g, int angle, String str, int length, int ord) {
+        if (angle < 360 || angle > -360)
+            angle = angle % 360;
         for (char c : str.toCharArray()) {
             switch (c) {
                 case 'F':
@@ -41,20 +40,19 @@ public class KochSnowflake extends JPanel implements MouseWheelListener {
                         drawSnowflake(g, angle, productionRule, length / 3, ord - 1);
                         break;
                     }
-                    Double[] trig = new Double[2];
-                    if (!trigValues.containsKey(angle)) {
-                        trig[0] = Math.cos(Math.toRadians(angle));
-                        trig[1] = Math.sin(Math.toRadians(angle));
-                        trigValues.put(angle, trig);
-                    } else
-                        trig = trigValues.get(angle);
 
-                    double newX = length * trig[0];// cosine(angle)
-                    double newY = length * trig[1];// sin(angle)
-                    Line2D line = new Line2D.Double(0, 0, newX, newY);
+                    Line2D line;
+                    String key = angle + "," + length;
+                    if (!lines.containsKey(key)) {
+                        double newX = length * Math.cos(Math.toRadians(angle));
+                        double newY = length * Math.sin(Math.toRadians(angle));
+                        line = new Line2D.Double(0, 0, newX, newY);
+                        lines.put(key, line);
+                    } else
+                        line = lines.get(key);
 
                     g.draw(line);
-                    g.translate(newX, newY);
+                    g.translate(line.getX2(), line.getY2());
 
                     break;
                 case '+':
@@ -83,14 +81,10 @@ public class KochSnowflake extends JPanel implements MouseWheelListener {
     }
 
     public void mouseWheelMoved(MouseWheelEvent e) {
-        System.out.println(e.getWheelRotation());
-        if (e.getWheelRotation() < 0) {// zoom in
-            // mousePoint = e.getPoint();
+        if (e.getWheelRotation() < 0)// zoom in
             zoomFactor *= 1.1;
-        } else { // zoom out
-            // mousePoint = e.getPoint();
+        else // zoom out
             zoomFactor /= 1.1;
-        }
         repaint();
     }
 
@@ -101,10 +95,9 @@ public class KochSnowflake extends JPanel implements MouseWheelListener {
         g2.setStroke(new BasicStroke(1));
         g2.setColor(new Color(0, 0, 0));
         g2.translate(100, 200);
-        g2.scale(0.01 * zoomFactor, 0.01 * zoomFactor);
+        g2.scale(0.00001 * zoomFactor, 0.00001 * zoomFactor);
 
         drawSnowflake(g2, 0, axiom, startLength, order);
-
     }
 
 }
