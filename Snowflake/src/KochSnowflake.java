@@ -1,14 +1,9 @@
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.*;
-import javax.swing.*;
 import java.awt.geom.Line2D;
 import java.util.HashMap;
-import java.awt.geom.AffineTransform;
 import java.awt.event.*;
 
 public class KochSnowflake extends JPanel implements MouseWheelListener {
@@ -33,6 +28,12 @@ public class KochSnowflake extends JPanel implements MouseWheelListener {
     private void drawSnowflake(Graphics2D g, int angle, String str, int length, int ord) {
         if (angle < 360 || angle > -360)
             angle = angle % 360;
+
+        if (angle == 360)// same angle
+            angle = 0;
+        if (angle == -180)// direction irrelevant
+            angle = 180;
+
         for (char c : str.toCharArray()) {
             switch (c) {
                 case 'F':
@@ -67,7 +68,6 @@ public class KochSnowflake extends JPanel implements MouseWheelListener {
             }
 
         }
-
     }
 
     /**
@@ -85,6 +85,8 @@ public class KochSnowflake extends JPanel implements MouseWheelListener {
             zoomFactor *= 1.1;
         else // zoom out
             zoomFactor /= 1.1;
+        if (zoomFactor < 1)
+            zoomFactor = 1;
         repaint();
     }
 
@@ -92,10 +94,10 @@ public class KochSnowflake extends JPanel implements MouseWheelListener {
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g.create();
-        g2.setStroke(new BasicStroke(1));
+        g2.setStroke(new BasicStroke(3));
         g2.setColor(new Color(0, 0, 0));
-        g2.translate(100, 200);
-        g2.scale(0.00001 * zoomFactor, 0.00001 * zoomFactor);
+        g2.translate(200, 250);
+        g2.scale(0.00004 * zoomFactor, 0.00004 * zoomFactor);
 
         drawSnowflake(g2, 0, axiom, startLength, order);
     }
