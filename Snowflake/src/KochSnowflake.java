@@ -11,7 +11,10 @@ public class KochSnowflake extends JPanel implements MouseWheelListener {
     private static String axiom = "F++F++F";
     private static String productionRule = "F-F++F-F";
     private int order = 1;
-    private double zoomFactor = 1;
+    private int startX = 683;
+    private int startY = 600;
+    private double zoomFactor = 1000;
+    private double scaleFactor = 0.00000004;
 
     private final int startLength = 14348907; // 3^15
 
@@ -23,6 +26,12 @@ public class KochSnowflake extends JPanel implements MouseWheelListener {
 
     public void setOrder(int newOrder) {
         order = newOrder;
+    }
+
+    public void resize(int width, int height, int scale) {
+        zoomFactor = scale;
+        startX = (width / 2) - (int) (startLength * zoomFactor * scaleFactor / 2);
+        startY = (height / 2) - (int) (Math.tan(Math.PI / 6) * (startLength * zoomFactor * scaleFactor / 2));
     }
 
     private void drawSnowflake(Graphics2D g, int angle, String str, int length, int ord) {
@@ -70,15 +79,15 @@ public class KochSnowflake extends JPanel implements MouseWheelListener {
         }
     }
 
-    /**
-     * Gets the preferred size of the Canvas.
-     * 
-     * @return The preferred size of the Canvas.
-     */
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(1000, 900);
-    }
+    // /**
+    // * Gets the preferred size of the Canvas.
+    // *
+    // * @return The preferred size of the Canvas.
+    // */
+    // @Override
+    // public Dimension getPreferredSize() {
+    // return new Dimension(1000, 900);
+    // }
 
     public void mouseWheelMoved(MouseWheelEvent e) {
         if (e.getWheelRotation() < 0)// zoom in
@@ -96,8 +105,8 @@ public class KochSnowflake extends JPanel implements MouseWheelListener {
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setStroke(new BasicStroke(3));
         g2.setColor(new Color(0, 0, 0));
-        g2.translate(200, 250);
-        g2.scale(0.00004 * zoomFactor, 0.00004 * zoomFactor);
+        g2.translate(startX, startY);
+        g2.scale(scaleFactor * zoomFactor, scaleFactor * zoomFactor);
 
         drawSnowflake(g2, 0, axiom, startLength, order);
     }
