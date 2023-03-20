@@ -11,10 +11,13 @@ public class KochSnowflake extends JPanel implements MouseWheelListener {
     private static String axiom = "F++F++F";
     private static String productionRule = "F-F++F-F";
     private int order = 1;
+
     private int startX = 683;
     private int startY = 600;
+
     private double zoomFactor = 1000;
-    private double scaleFactor = 0.00000004;
+    private double scaleZoomFactor = 0.00000004;
+    private int jFrameScale = (int) zoomFactor;
 
     private final int startLength = 14348907; // 3^15
 
@@ -30,8 +33,9 @@ public class KochSnowflake extends JPanel implements MouseWheelListener {
 
     public void resize(int width, int height, int scale) {
         zoomFactor = scale;
-        startX = (width / 2) - (int) (startLength * zoomFactor * scaleFactor / 2);
-        startY = (height / 2) - (int) (Math.tan(Math.PI / 6) * (startLength * zoomFactor * scaleFactor / 2));
+        jFrameScale = scale;
+        startX = (width / 2) - (int) (startLength * zoomFactor * scaleZoomFactor / 2);
+        startY = (height / 2) - (int) (Math.tan(Math.PI / 6) * (startLength * zoomFactor * scaleZoomFactor / 2));
     }
 
     private void drawSnowflake(Graphics2D g, int angle, String str, int length, int ord) {
@@ -94,8 +98,11 @@ public class KochSnowflake extends JPanel implements MouseWheelListener {
             zoomFactor *= 1.1;
         else // zoom out
             zoomFactor /= 1.1;
-        if (zoomFactor < 1)
-            zoomFactor = 1;
+
+        System.out.println(zoomFactor);
+        if (zoomFactor < jFrameScale)
+            zoomFactor = jFrameScale;
+
         repaint();
     }
 
@@ -106,7 +113,7 @@ public class KochSnowflake extends JPanel implements MouseWheelListener {
         g2.setStroke(new BasicStroke(3));
         g2.setColor(new Color(0, 0, 0));
         g2.translate(startX, startY);
-        g2.scale(scaleFactor * zoomFactor, scaleFactor * zoomFactor);
+        g2.scale(scaleZoomFactor * zoomFactor, scaleZoomFactor * zoomFactor);
 
         drawSnowflake(g2, 0, axiom, startLength, order);
     }
