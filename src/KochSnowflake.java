@@ -27,11 +27,19 @@ public class KochSnowflake extends JPanel implements MouseWheelListener {
      * The axiom of the Koch snowflake fractal. This L-system rule represents the
      * starting equilateral
      * triangle.
+     * 
+     * F means draw a straight line
+     * + means turn 60° right
+     * - means turn 60° left
      */
     private static String axiom = "F++F++F";
 
     /**
      * The L-system rule used to add a triangle in the middle of a line.
+     * 
+     * F means draw a straight line
+     * + means turn 60° right
+     * - means turn 60° left
      */
     private static String productionRule = "F-F++F-F";
 
