@@ -1,7 +1,5 @@
 import java.awt.*;
 import java.awt.event.ComponentListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowStateListener;
 import java.awt.event.ComponentEvent;
 import java.io.File;
 
@@ -11,13 +9,36 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.imageio.*;
 
+/**
+ * The App class creates the GUI for the Koch Snowflake program.
+ * 
+ * The GUI displays the fractal with a JSlider component that allows the user
+ * to adjust the order of the fractal.
+ * 
+ * The KochSnowflake class handles the generation and drawing of the fractal,
+ * and the ComponentListener is used to dynamically resize the fractal when the
+ * window size changes.
+ * 
+ * @author David Brockbank
+ * @version 1.0, March 2023
+ */
 public class App {
-
+    /**
+     * The main method sets up and displays the main GUI frame for the Koch
+     * Snowflake program.
+     * The frame contains a panel that displays the Koch Snowflake and a slider for
+     * adjusting the order of the fractal.
+     * The method also includes a component listener to resize the fractal panel
+     * when the frame is resized.
+     *
+     * @param args command line arguments
+     * @throws Exception if there is an error loading the icon image
+     */
     public static void main(String[] args) throws Exception {
 
         // Set up the main GUI frame
         JFrame frame = new JFrame("Koch Snowflake");
-        Image image = ImageIO.read(new File("./src/icon.png"));
+        Image image = ImageIO.read(new File("icon.png"));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setIconImage(image);
 
@@ -62,6 +83,12 @@ public class App {
 
         frame.addComponentListener(new ComponentListener() {
 
+            /**
+             * Resize the fractal panel when the frame is resized
+             *
+             * @param frame     the main frame
+             * @param kochPanel the fractal panel
+             */
             private void resizeApp(JFrame frame, KochSnowflake kochPanel) {
                 int newWidth = frame.getWidth();
                 int newHeight = frame.getHeight();
